@@ -326,7 +326,7 @@ img { max-width: 100%; height: auto; }
 }
 
 @media (min-width: 46rem) {
-  .cards { grid-template-columns: repeat(3, 1fr); }
+  .cards { grid-template-columns: repeat(2, 1fr); }
 }
 
 .card {
@@ -359,6 +359,16 @@ img { max-width: 100%; height: auto; }
   color: var(--muted);
   font-size: 0.9375rem;
   line-height: 1.58;
+}
+
+/* Domaine et stade, au-dessus du titre */
+.card-kicker {
+  margin-bottom: 0.625rem;
+  color: var(--navy);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* Repoussée en bas de carte pour aligner les métadonnées entre elles */
