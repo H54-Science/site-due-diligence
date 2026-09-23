@@ -7,6 +7,12 @@
   <title>Page introuvable — Hedi Rhaiem</title>
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="stylesheet" href="/style.css">
+  <script>
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
 </head>
 <body>
   <main class="section">

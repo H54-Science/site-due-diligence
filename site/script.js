@@ -1,9 +1,10 @@
 /* ==========================================================================
    Due diligence scientifique — script minimal
-   Deux responsabilités seulement :
+   Responsabilités :
      1. les apparitions au scroll (Intersection Observer)
      2. l'envoi du formulaire de contact vers /api/contact (fonction
         serverless Cloudflare Pages qui relaie vers Notion)
+     3. l'année du pied de page, 4. le mode clair / sombre
    Aucune dépendance externe.
    ========================================================================== */
 
@@ -157,7 +158,43 @@
     if (year) year.textContent = new Date().getFullYear();
   }
 
+  /* ------------------------------------------------------------------------
+     4. Mode clair / sombre
+     Sans choix enregistré, le site suit le réglage du système. Un clic sur le
+     bouton force l'autre thème et le mémorise pour les visites suivantes.
+     ---------------------------------------------------------------------- */
+  function setupTheme() {
+    var button = document.querySelector('.theme-toggle');
+    if (!button) return;
+
+    var root = document.documentElement;
+    var systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function isDark() {
+      var chosen = root.getAttribute('data-theme');
+      return chosen ? chosen === 'dark' : systemDark.matches;
+    }
+
+    function syncButton() {
+      var dark = isDark();
+      button.setAttribute('aria-label', dark ? 'Activer le mode clair' : 'Activer le mode sombre');
+      button.setAttribute('aria-pressed', dark ? 'true' : 'false');
+    }
+
+    button.addEventListener('click', function () {
+      var next = isDark() ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      syncButton();
+    });
+
+    // Si le système change de mode et qu'aucun choix n'est mémorisé
+    if (systemDark.addEventListener) systemDark.addEventListener('change', syncButton);
+    syncButton();
+  }
+
   setupReveal();
   setupForm();
   setupYear();
+  setupTheme();
 })();

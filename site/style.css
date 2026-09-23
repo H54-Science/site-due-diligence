@@ -17,6 +17,13 @@
   --rule: #e6e6ea;          /* filets fins, jamais de bordure marquée */
   --bg: #ffffff;
   --bg-soft: #fafafa;       /* survol de carte, à peine perceptible */
+  --on-accent: #ffffff;     /* texte posé sur la couleur d'accent */
+  --header-bg: rgba(255, 255, 255, 0.72);
+  --header-rule: rgba(0, 0, 0, 0.05);
+  --card-hover-rule: #d3d5db;
+  --error: #b3261e;
+  --logo-filter: none;
+  color-scheme: light;
 
   /* Typographie */
   --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
@@ -29,6 +36,47 @@
 
   /* Courbe d'animation douce, sans rebond */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Thème sombre : même hiérarchie, accent éclairci pour rester lisible.
+   Appliqué si l'utilisateur l'a choisi (data-theme="dark"), ou si son système
+   est en mode sombre et qu'il n'a pas forcé le mode clair. */
+:root[data-theme="dark"] {
+  --navy: #8fb0ea;
+  --navy-dark: #b3caf2;
+  --ink: #f2f3f5;
+  --body: #c9ccd3;
+  --muted: #9095a0;
+  --rule: #2a2d34;
+  --bg: #111317;
+  --bg-soft: #171a1f;
+  --on-accent: #0d1016;
+  --header-bg: rgba(17, 19, 23, 0.72);
+  --header-rule: rgba(255, 255, 255, 0.06);
+  --card-hover-rule: #3a3e47;
+  --error: #f2a39c;
+  --logo-filter: invert(1) hue-rotate(180deg);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --navy: #8fb0ea;
+    --navy-dark: #b3caf2;
+    --ink: #f2f3f5;
+    --body: #c9ccd3;
+    --muted: #9095a0;
+    --rule: #2a2d34;
+    --bg: #111317;
+    --bg-soft: #171a1f;
+    --on-accent: #0d1016;
+    --header-bg: rgba(17, 19, 23, 0.72);
+    --header-rule: rgba(255, 255, 255, 0.06);
+    --card-hover-rule: #3a3e47;
+    --error: #f2a39c;
+    --logo-filter: invert(1) hue-rotate(180deg);
+    color-scheme: dark;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -56,6 +104,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 h1, h2, h3 {
@@ -96,11 +145,11 @@ img { max-width: 100%; height: auto; }
   top: 0;
   z-index: 100;
   background: var(--navy);
-  color: #fff;
+  color: var(--on-accent);
   padding: 0.75rem 1.25rem;
   border-radius: 0 0 8px 0;
 }
-.skip-link:focus { left: 0; color: #fff; }
+.skip-link:focus { left: 0; color: var(--on-accent); }
 
 /* --------------------------------------------------------------------------
    3. Mise en page
@@ -127,10 +176,10 @@ img { max-width: 100%; height: auto; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--header-bg);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--header-rule);
 }
 
 .header-inner {
@@ -156,6 +205,7 @@ img { max-width: 100%; height: auto; }
    réserve la place avant le chargement et évite tout décalage de mise en page. */
 .header-logo {
   display: block;
+  filter: var(--logo-filter);
   height: 1.625rem;
   width: auto;
 }
@@ -164,6 +214,38 @@ img { max-width: 100%; height: auto; }
   display: flex;
   gap: 1.75rem;
   font-size: 0.875rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* Bouton clair / sombre : icône seule, zone de clic de 36px */
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-right: -0.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.theme-toggle:hover { color: var(--ink); background: var(--bg-soft); }
+.theme-toggle svg { width: 1.125rem; height: 1.125rem; }
+/* Affiche la lune en clair (passer en sombre), le soleil en sombre */
+.theme-toggle .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
 }
 
 .header-nav a { color: var(--muted); }
@@ -251,7 +333,7 @@ img { max-width: 100%; height: auto; }
   border: 0;
   border-radius: 980px;         /* pilule */
   background: var(--navy);
-  color: #fff;
+  color: var(--on-accent);
   font-family: inherit;
   font-size: 1rem;
   font-weight: 500;
@@ -262,7 +344,7 @@ img { max-width: 100%; height: auto; }
 
 .button:hover {
   background: var(--navy-dark);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .button:active { transform: scale(0.985); }
@@ -342,7 +424,7 @@ img { max-width: 100%; height: auto; }
 }
 
 .card:hover {
-  border-color: #d3d5db;
+  border-color: var(--card-hover-rule);
   background: var(--bg-soft);
   transform: translateY(-2px);
   color: inherit;
@@ -427,7 +509,7 @@ img { max-width: 100%; height: auto; }
 
 /* Champ en erreur après validation JavaScript */
 .field input[aria-invalid="true"],
-.field textarea[aria-invalid="true"] { border-bottom-color: #b3261e; }
+.field textarea[aria-invalid="true"] { border-bottom-color: var(--error); }
 
 /* Piège à robots : retiré du flux sans être masqué par display:none */
 .honeypot {
@@ -445,7 +527,7 @@ img { max-width: 100%; height: auto; }
   color: var(--muted);
 }
 
-.form-status[data-state="error"] { color: #b3261e; }
+.form-status[data-state="error"] { color: var(--error); }
 .form-status[data-state="success"] { color: var(--navy); }
 
 .contact-alt {
