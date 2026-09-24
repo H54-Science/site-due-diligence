@@ -530,6 +530,12 @@ img { max-width: 100%; height: auto; }
 .form-status[data-state="error"] { color: var(--error); }
 .form-status[data-state="success"] { color: var(--navy); }
 
+.form-note {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
 .contact-alt {
   margin-top: clamp(2.5rem, 6vw, 3.5rem);
   padding-top: 1.5rem;
@@ -552,6 +558,10 @@ img { max-width: 100%; height: auto; }
   color: var(--muted);
   font-size: 0.8125rem;
 }
+
+.footer-links { margin-top: 0.875rem; }
+.footer-links a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.footer-links a:hover { color: var(--ink); }
 
 .footer-note {
   max-width: 34rem;
